@@ -7,7 +7,7 @@ from catkin_pkg.python_setup import generate_distutils_setup
 setup_args = generate_distutils_setup(
     packages=['owi_arm'],
     package_dir={'': 'src'},
-    requires=['rospy','./scripts/owi_node.py']
+    requires=['rospy','./scripts/cmd_robot.py']
 )
 
 setup(**setup_args)
