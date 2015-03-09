@@ -8,6 +8,8 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
+  sensor_msgs
+  message_generation
 )
 
 ## System dependencies are found with CMake's conventions
@@ -65,10 +67,10 @@ catkin_python_setup()
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs
-# )
+generate_messages( DEPENDENCIES
+   std_msgs
+   sensor_msgs
+)
 
 ###################################
 ## catkin specific configuration ##
@@ -82,7 +84,7 @@ catkin_python_setup()
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES owi_arm
-  CATKIN_DEPENDS roscpp rospy std_msgs
+  CATKIN_DEPENDS roscpp rospy std_msgs sensor_msgs
 #  DEPENDS system_lib
 )
 
@@ -93,7 +95,7 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 # include_directories(include)
-include_directories(
+include_directories( include
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -139,7 +141,7 @@ include_directories(
 install(PROGRAMS 
 #   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 #   FILES_MATCHING PATTERN "*.h"
-   scripts/to_owi_arm.py
+   scripts/owi_joystick_node.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 
 #   PATTERN ".svn" EXCLUDE
