@@ -24,40 +24,38 @@ catkin_python_setup()
 ################################################
 ## Declare ROS messages, services and actions ##
 ################################################
-
+# MAKE SURE TO GO THROUGH THIS CAREFULLY
 ## To declare and build messages, services or actions from within this
 ## package, follow these steps:
 ## * Let MSG_DEP_SET be the set of packages whose message types you use in
 ##   your messages/services/actions (e.g. std_msgs, actionlib_msgs, ...).
-## * In the file package.xml:
+## X* In the file package.xml:
 ##   * add a build_depend and a run_depend tag for each package in MSG_DEP_SET
-##   * If MSG_DEP_SET isn't empty the following dependencies might have been
-##     pulled in transitively but can be declared for certainty nonetheless:
-##     * add a build_depend tag for "message_generation"
-##     * add a run_depend tag for "message_runtime"
+##  X * If MSG_DEP_SET isn't empty the following dependencies might have been
+##  X   pulled in transitively but can be declared for certainty nonetheless:
+##  X   * add a build_depend tag for "message_generation"
+##  X   * add a run_depend tag for "message_runtime"
 ## * In this file (CMakeLists.txt):
-##   * add "message_generation" and every package in MSG_DEP_SET to
+##   X* add "message_generation" and every package in MSG_DEP_SET to
 ##     find_package(catkin REQUIRED COMPONENTS ...)
-##   * add "message_runtime" and every package in MSG_DEP_SET to
+##   X* add "message_runtime" and every package in MSG_DEP_SET to
 ##     catkin_package(CATKIN_DEPENDS ...)
-##   * uncomment the add_*_files sections below as needed
+##   X* uncomment the add_*_files sections below as needed
 ##     and list every .msg/.srv/.action file to be processed
-##   * uncomment the generate_messages entry below
-##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
+##   X* uncomment the generate_messages entry below
+##   X* add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
 # add_message_files(
 #   FILES
-#   Message1.msg
-#   Message2.msg
 # )
 
 ## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   Service1.srv
-#   Service2.srv
-# )
+#DIRECTORY srv
+#add_service_files(
+#  FILES 
+#)
+
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -66,10 +64,10 @@ catkin_python_setup()
 #   Action2.action
 # )
 
-## Generate added messages and services with any dependencies listed here
-generate_messages( DEPENDENCIES
-   std_msgs
-   sensor_msgs
+# Generate added messages and services with any dependencies listed here
+generate_messages(  DEPENDENCIES
+  std_msgs
+  sensor_msgs
 )
 
 ###################################
@@ -83,8 +81,8 @@ generate_messages( DEPENDENCIES
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES owi_arm
-  CATKIN_DEPENDS roscpp rospy std_msgs sensor_msgs
+#  LIBRARIES tinyg_node
+   CATKIN_DEPENDS message_runtime
 #  DEPENDS system_lib
 )
 
@@ -100,19 +98,19 @@ include_directories( include
 )
 
 ## Declare a cpp library
-# add_library(owi_arm
-#   src/${PROJECT_NAME}/owi_arm.cpp
+# add_library(tinyg_node
+#   src/${PROJECT_NAME}/tinyg_node.cpp
 # )
 
 ## Declare a cpp executable
-# add_executable(owi_arm_node src/owi_arm_node.cpp)
+# add_executable(tinyg_node_node src/tinyg_node_node.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-# add_dependencies(owi_arm_node owi_arm_generate_messages_cpp)
+#add_dependencies(tinyg_node ${PROJECT_NAME}_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(owi_arm_node
+# target_link_libraries(tinyg_node_node
 #   ${catkin_LIBRARIES}
 # )
 
@@ -125,27 +123,26 @@ include_directories( include
 
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
-# install(PROGRAMS
-#   scripts/my_python_script
-#   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
+install(PROGRAMS
+   
+   scripts/cmd_robot.py
+   scripts/owi_joystick_node.py
+   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+   )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS owi_arm owi_arm_node
+# install(TARGETS tinyg_node tinyg_node_node
 #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 # )
 
 ## Mark cpp header files for installation
-install(PROGRAMS 
+# install(DIRECTORY include/${PROJECT_NAME}/
 #   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 #   FILES_MATCHING PATTERN "*.h"
-   scripts/owi_joystick_node.py
-   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-
 #   PATTERN ".svn" EXCLUDE
-)
+# )
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 # install(FILES
@@ -159,7 +156,7 @@ install(PROGRAMS
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_owi_arm.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_tinyg_node.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
