@@ -52,10 +52,21 @@
       <inertia ixx="100"  ixy="0"  ixz="0" iyy="100" iyz="0" izz="100" />
     </inertial>
   </link>
+  <link name="wrist">
+    <visual>
+      <geometry>
+        <cylinder length="0.01" radius="0.016"/>
+      </geometry>
+      <material name="mystery2">
+	<color rgba="0.1 1 0.3 1"/>
+      </material>
+    </visual>
+  </link>
+
   <link name="end_effector">
     <visual>
       <geometry>
-        <cylinder length="0.02" radius="0.016"/>
+        <cylinder length="0.01" radius="0.016"/>
       </geometry>
       <material name="mystery">
 	<color rgba="0.5 1 0.5 1"/>
@@ -85,12 +96,23 @@
     <child link="arm_link_2"/>
     <origin xyz="0.0 0.0 0.137"/>
   </joint>
-  <joint name="arm2_to_endeffector" type="revolute">
+
+  <joint name="arm2_to_wrist" type="revolute">
+    <limit effort="1000.0" lower="-1.7" upper="1.7" velocity="0.5"/>  
+    <axis xyz="0 1 0"/>
+    <parent link="arm_link_2"/>
+    <child link="wrist"/>
+    <origin xyz="0.14 0.0 -0.015"/>
+  </joint>
+
+
+
+  <joint name="wrist_to_endeffector" type="revolute">
     <limit effort="1000.0" lower="-1.57" upper="1.57" velocity="0.5"/>  
     <axis xyz="0 0 1"/>
-    <parent link="arm_link_2"/>
+    <parent link="wrist"/>
     <child link="end_effector"/>
-    <origin xyz="0.14 0.0 -0.015"/>
+    <origin xyz="0.0 0.0 -0.01"/>
   </joint>
 
 
