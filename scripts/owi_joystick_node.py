@@ -17,15 +17,15 @@ class MyJoystickNode(object):
 
     def update_state(self,msg):
         self.state = msg.data
-#        rospy.loginfo(self.state)
 
     def do_it(self,msg):
-        print "hi"
+        if( self.state is None ):
+            self.state = [0,0,0,0,0]
         m1 = self.state[1]
         m2 = self.state[2]
         m3 = self.state[3]
         m4 = self.state[4]
-        step = 10
+        step = 5
         if(msg.buttons[1] == 1 ):
             m1+=step
         elif( msg.buttons[2] == 1 ):
