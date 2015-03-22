@@ -1,3 +1,6 @@
+#!/usr/bin/env python 
+# THIS SHEBANG IS REALLY REALLY IMPORTANT
+
 import rospy
 from std_msgs.msg import Int16MultiArray
 import time

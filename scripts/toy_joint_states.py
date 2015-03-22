@@ -1,4 +1,5 @@
-from geometry_msgs.msg import PointStamped
+#!/usr/bin/env python 
+# THIS SHEBANG IS REALLY REALLY IMPORTANT
 from sensor_msgs.msg import JointState
 from std_msgs.msg import Int16MultiArray
 import rospy
@@ -8,8 +9,8 @@ import numpy as np
 
 class JointStateRepublisher(object):
     def __init__(self):
-        self.m0_trim = rospy.get_param('m0_trim', 0.00)
-        self.m1_trim = rospy.get_param('m1_trim', 0.00)
+        self.m0_trim = rospy.get_param('m0_trim', -90.00)
+        self.m1_trim = rospy.get_param('m1_trim', -90.0)
         self.m2_trim = rospy.get_param('m2_trim', 0.00)
         self.m3_trim = rospy.get_param('m3_trim', 0.00)
         self.wrist_trim = rospy.get_param('wrist_trim', 0.00)
@@ -27,23 +28,31 @@ class JointStateRepublisher(object):
         self._run()
 
     def _run(self):
+        print "running"
         r = rospy.Rate(self.rate) # 30hz 
         while not rospy.is_shutdown():
             self._publish_joint_state()
             r.sleep()
 
     def _update_from_arduino(self,msg):
-        self.states[0] = np.deg2rad(msg.data[0]) + np.deg2rad(self.m0_trim)
-        self.states[1] = np.deg2rad(msg.data[1]) + np.deg2rad(self.m1_trim)
+        self.states[0] = np.deg2rad(msg.data[4]) + np.deg2rad(self.m0_trim)
+        self.states[1] = -(np.deg2rad(msg.data[3]) + np.deg2rad(self.m1_trim))
         self.states[2] = np.deg2rad(msg.data[2]) + np.deg2rad(self.m2_trim)
         self.states[3] = np.deg2rad(self.wrist_trim)
-        self.states[4] = np.deg2rad(msg.data[3]) + np.deg2rad(self.m3_trim)
+        self.states[4] = np.deg2rad(msg.data[1]) + np.deg2rad(self.m3_trim)
 
     def _publish_joint_state(self):
         msg = JointState()
         msg.header.stamp = rospy.Time.now()
         msg.name =  ['base_to_body', 'body_to_arm1', 'arm1_to_arm2', 'arm2_to_wrist','wrist_to_endeffector']
-        msg.position = self.state
+        msg.position = self.states
         msg.velocity = [0.00,0.00,0.00,0.00,0.00]
         msg.effort = [0.00,0.00,0.00,0.00,0.00]
         self.joint_state_pub.publish(msg)
+
+if __name__ == '__main__':
+    try:
+        rospy.init_node('joint_state_republisher')
+        node = JointStateRepublisher()
+    except rospy.ROSInterruptException:
+        rospy.logwarn('ERROR!!!')

@@ -7,7 +7,7 @@ from catkin_pkg.python_setup import generate_distutils_setup
 setup_args = generate_distutils_setup(
     packages=['owi_arm'],
     package_dir={'': 'src'},
-    requires=['rospy',"std_msgs", "sensor_msgs", './scripts/cmd_robot.py','./scripts/owi_joystick_node.py']
+    requires=['rospy',"std_msgs", "sensor_msgs", './scripts/cmd_robot.py','./scripts/owi_joystick_node.py','./scripts/toy_joint_states.py']
 )
 
 setup(**setup_args)

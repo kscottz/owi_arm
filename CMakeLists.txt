@@ -124,9 +124,9 @@ include_directories( include
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
 install(PROGRAMS
-   
    scripts/cmd_robot.py
    scripts/owi_joystick_node.py
+   scripts/toy_joint_states.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
    )
 

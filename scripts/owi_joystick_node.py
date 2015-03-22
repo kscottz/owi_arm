@@ -1,3 +1,5 @@
+#!/usr/bin/env python 
+# THIS SHEBANG IS REALLY REALLY IMPORTANT
 import rospy
 import roscpp
 import numpy as np
@@ -64,9 +66,8 @@ class MyJoystickNode(object):
  
 
 if __name__ == '__main__':
-    # Initialize the node and name it.
-    rospy.init_node('owi_joystick_node')
-    node = MyJoystickNode()
-#    try:
- #   except rospy.ROSInterruptException:
- #       rospy.logwarn('ERROR!!!')
+    try:
+        rospy.init_node('owi_joystick_node')
+        node = MyJoystickNode()
+    except rospy.ROSInterruptException:
+        rospy.logwarn('ERROR!!!')
