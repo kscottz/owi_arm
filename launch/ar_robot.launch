@@ -1,10 +1,10 @@
 <launch>
   <!--node pkg="rviz" type="rviz" name="rviz" 
     args="-d $(find ar_pose)/launch/live_single.rviz"/-->
-  <node pkg="tf" type="static_transform_publisher" name="bl_to_cam" 
-    args="0 0 0.5 -1.57 0 -1.57 base_link camera 10" />
-  <!--node pkg="tf" type="static_transform_publisher" name="ar_to_robot" 
-    args="0 0.1 0.0 0 0 0 base_link ar_marker 10" /-->
+  <!--node pkg="tf" type="static_transform_publisher" name="bl_to_cam" 
+    args="0 0 0.5 -1.57 0 -1.57 base_link camera 10" /-->
+  <node pkg="tf" type="static_transform_publisher" name="ar_to_robot" 
+    args="-0.1 0.0 0.0 -1.57 0 0 base_link ar_marker 10"/>
   <node ns="camera" pkg="image_proc" type="image_proc" name="image_proc"/>
   <node ns="camera" pkg="uvc_camera" type="uvc_camera_node" name="uvc_camera"
     output="screen">
@@ -25,7 +25,8 @@
     <param name="marker_center_y" type="double" value="0.0"/>
     <param name="threshold" type="int" value="150"/>
     <param name="use_history" type="bool" value="true"/>
-  </node>
+    <param name="reverse_transform" type="bool" value="true"/> 
+ </node>
    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
        <remap from="joint_states" to="different_joint_states" />
    </node>
