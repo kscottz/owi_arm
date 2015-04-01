@@ -52,9 +52,10 @@ catkin_python_setup()
 
 ## Generate services in the 'srv' folder
 #DIRECTORY srv
-#add_service_files(
-#  FILES 
-#)
+add_service_files(
+  FILES 
+  waypoint.srv
+)
 
 
 ## Generate actions in the 'action' folder
@@ -127,6 +128,8 @@ install(PROGRAMS
    scripts/cmd_robot.py
    scripts/owi_joystick_node.py
    scripts/toy_joint_states.py
+   scripts/arm_controller.py
+
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
    )
 

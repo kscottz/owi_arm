@@ -5,14 +5,17 @@ import roscpp
 import numpy as np
 from sensor_msgs.msg import Joy
 from std_msgs.msg import Int16MultiArray
+from owi_arm.srv import *
 class MyJoystickNode(object):
     def __init__(self):
          rospy.on_shutdown(self.shutdown)
-         self.pub = rospy.Publisher('robot', Int16MultiArray, queue_size=1)
          rospy.Subscriber("/joy", Joy, self.do_it)
          rospy.Subscriber("/state", Int16MultiArray, self.update_state)
          rospy.init_node('owi_joystick_node')
          self.state = [0,0,0,0,0]
+         self.waypoint_proxy = rospy.ServiceProxy('/waypoint', waypoint)
+         self.right_bottom_trigger = 0
+         self.pub = rospy.Publisher('/robot', Int16MultiArray, queue_size=1)
          rospy.spin()
 
     def update_state(self,msg):
@@ -55,6 +58,16 @@ class MyJoystickNode(object):
             rospy.loginfo("sending {0}.".format(data))
             out.data = data
             self.pub.publish(out)
+        # button up
+        if( msg.buttons[4] == 0 and self.right_bottom_trigger == 1):
+            self.call_waypoint_service("animate.txt")
+        self.right_bottom_trigger = msg.buttons[4]
+        
+    def call_waypoint_service(self,fname):
+        req = waypointRequest()
+        req.fname = fname
+        response = self.waypoint_proxy(req)
+        rospy.logwarn("JOYSTICK NODE GOT {0}".format(response.result))
 
     def shutdown(self):
         data = [0,0,0,0]
