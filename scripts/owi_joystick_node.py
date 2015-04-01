@@ -3,18 +3,24 @@
 import rospy
 import roscpp
 import numpy as np
+import actionlib
 from sensor_msgs.msg import Joy
 from std_msgs.msg import Int16MultiArray
-from owi_arm.srv import *
+from owi_arm.srv import * # for services
+from owi_arm.msg import * # for actions
+
 class MyJoystickNode(object):
     def __init__(self):
-         rospy.on_shutdown(self.shutdown)
+         self.animate_client = actionlib.SimpleActionClient('play_animation', play_animationAction)
+         self.animate_client.wait_for_server()
          rospy.Subscriber("/joy", Joy, self.do_it)
          rospy.Subscriber("/state", Int16MultiArray, self.update_state)
          rospy.init_node('owi_joystick_node')
          self.state = [0,0,0,0,0]
+         self.rb_trigger = 0
+         self.rt_trigger = 0
+
          self.waypoint_proxy = rospy.ServiceProxy('/waypoint', waypoint)
-         self.right_bottom_trigger = 0
          self.pub = rospy.Publisher('/robot', Int16MultiArray, queue_size=1)
          rospy.spin()
 
@@ -59,9 +65,26 @@ class MyJoystickNode(object):
             out.data = data
             self.pub.publish(out)
         # button up
-        if( msg.buttons[4] == 0 and self.right_bottom_trigger == 1):
+        if( msg.buttons[4] == 0 and self.rb_trigger == 1):
             self.call_waypoint_service("animate.txt")
-        self.right_bottom_trigger = msg.buttons[4]
+        self.rb_trigger = msg.buttons[4]
+ 
+        if( msg.buttons[5] == 0 and self.rt_trigger == 1):
+           self.call_animate_service("animate.txt",1)
+        self.rt_trigger = msg.buttons[5]
+        
+    def call_animate_service(self,fname,t):
+        rospy.logwarn("ANIMATING!!! -- like regular mating but better.")
+        goal = play_animationGoal() 
+        goal.filename = fname
+        goal.step_size = t
+        self.animate_client.send_goal(goal)
+        # wait for the animate to complete
+        self.animate_client.wait_for_result()
+        # get the result of the animate
+        result = self.animate_client.get_result()
+
+
         
     def call_waypoint_service(self,fname):
         req = waypointRequest()
@@ -69,12 +92,6 @@ class MyJoystickNode(object):
         response = self.waypoint_proxy(req)
         rospy.logwarn("JOYSTICK NODE GOT {0}".format(response.result))
 
-    def shutdown(self):
-        data = [0,0,0,0]
-        out = Int16MultiArray()
-        print "sending {0}.".format(data)
-        out.data = data
-        pub.publish(out)
 
  
 
