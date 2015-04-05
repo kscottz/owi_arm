@@ -128,6 +128,7 @@ include_directories( include
 install(PROGRAMS
    scripts/cmd_robot.py
    scripts/owi_joystick_node.py
+   scripts/joystick_node.py
    scripts/toy_joint_states.py
    scripts/arm_controller.py
 
