@@ -1,6 +1,6 @@
 string filename
 int32 step_size
 ---
-string update
----
 string result
+---
+string update

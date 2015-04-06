@@ -11,24 +11,27 @@ from owi_arm.msg import * # for actions
 
 class MyJoystickNode(object):
     def __init__(self):
-         self.animate_client = actionlib.SimpleActionClient('play_animation', play_animationAction)
-         self.animate_client.wait_for_server()
-         rospy.Subscriber("/joy", Joy, self.do_it)
-         rospy.Subscriber("/state", Int16MultiArray, self.update_state)
-         rospy.init_node('owi_joystick_node')
-         self.state = [0,0,0,0,0]
-         self.rb_trigger = 0
-         self.rt_trigger = 0
-
-         self.waypoint_proxy = rospy.ServiceProxy('/waypoint', waypoint)
-         self.pub = rospy.Publisher('/robot', Int16MultiArray, queue_size=1)
-         rospy.spin()
+        # create the action library client to play animation
+        self.animate_client = actionlib.SimpleActionClient('play_animation', play_animationAction)
+        # wait for that action to spin up.
+        self.animate_client.wait_for_server()
+        # create a proxy to the waypoint service. 
+        self.waypoint_proxy = rospy.ServiceProxy('/waypoint', waypoint)
+        
+        rospy.Subscriber("/joy", Joy, self.do_it)
+        rospy.Subscriber("/state", Int16MultiArray, self.update_state)
+        rospy.init_node('owi_joystick_node')
+        self.state = [0,0,0,0,0]
+        self.rb_trigger = 0
+        self.rt_trigger = 0
+        self.pub = rospy.Publisher('/robot', Int16MultiArray, queue_size=1)
+        rospy.spin()
 
     def update_state(self,msg):
         self.state = msg.data
 
     def do_it(self,msg):
-        rospy.loginfo("ASDFASDFASDF")
+
         if( self.state is None ):
             self.state = [0,0,0,0,0]
         m1 = self.state[1]
@@ -76,19 +79,24 @@ class MyJoystickNode(object):
         
     def call_animate_service(self,fname,t):
         rospy.logwarn("ANIMATING!!! -- like regular mating but better.")
+        # create a goal for action
         goal = play_animationGoal() 
         goal.filename = fname
         goal.step_size = t
         self.animate_client.send_goal(goal)
-        # wait for the animate to complete
+        # wait for the animate action to complete
         self.animate_client.wait_for_result()
         # get the result of the animate
         result = self.animate_client.get_result()
-        
+        rospy.logwarn("result of animation {0}".format(result))
+
     def call_waypoint_service(self,fname):
+        # create the request message
         req = waypointRequest()
         req.fname = fname
+        # send the message
         response = self.waypoint_proxy(req)
+        # print the result. 
         rospy.logwarn("JOYSTICK NODE GOT {0}".format(response.result))
 
 
