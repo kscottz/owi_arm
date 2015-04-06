@@ -59,7 +59,7 @@ class MyJoystickNode(object):
         data = [self.state[0],
                 int(np.clip(m1,0,180)),
                 int(np.clip(m2,0,180)),
-                int(np.clip(m3,0,180)),
+                int(np.clip(m3,0,120)),
                 int(np.clip(m4,0,180))]
         change = any([abs(a-b)>0 for a,b in zip(data,self.state)])
         self.state = data
