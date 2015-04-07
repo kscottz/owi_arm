@@ -131,6 +131,7 @@ install(PROGRAMS
    scripts/joystick_node.py
    scripts/toy_joint_states.py
    scripts/arm_controller.py
+   scripts/run_image_processing.py
 
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
    )
