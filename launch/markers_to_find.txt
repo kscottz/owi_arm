@@ -4,7 +4,7 @@
 #pattern 1
 4x4_68
 data/4x4/4x4_68.patt
-100.0
+98.0
 0.0 0.0
 
 #pattern 2

@@ -12,7 +12,7 @@
       value="file:///home/kscottz/.ros/camera_info/usb_cam.yaml" />
   </node>
   <node pkg="tf" type="static_transform_publisher" name="ar_to_robot" 
-    args="0.0 0.11 0.0 1.57 0 0 4x4_68 base_link 10"/>
+    args="-0.05 -0.15 -0.01 -1.57 0 0 4x4_68 base_link 10"/>
   <node name="ar_pose" pkg="ar_pose" type="ar_multi" respawn="false"
     output="screen">
    <param name="marker_pattern_list" type="string"
